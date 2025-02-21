@@ -1,5 +1,6 @@
   package onepiece.dailysnapbackend.object.postgres;
 
+  import jakarta.persistence.CascadeType;
   import jakarta.persistence.Column;
   import jakarta.persistence.Entity;
   import jakarta.persistence.FetchType;
@@ -7,6 +8,8 @@
   import jakarta.persistence.GenerationType;
   import jakarta.persistence.Id;
   import jakarta.persistence.ManyToOne;
+  import jakarta.persistence.OneToMany;
+  import java.util.List;
   import java.util.UUID;
   import lombok.AllArgsConstructor;
   import lombok.Getter;
@@ -20,13 +23,13 @@
   @NoArgsConstructor
   @AllArgsConstructor
   @SuperBuilder
-  public class Photo extends BasePostgresEntity{
+  public class Post extends BasePostgresEntity{
 
     // 게시물 ID
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(columnDefinition = "uuid DEFAULT uuid_generate_v4()", updatable = false, nullable = false)
-    private UUID photoId;
+    private UUID postId;
 
     // 작성자 회원
     @ManyToOne(fetch= FetchType.LAZY)
@@ -34,15 +37,15 @@
 
     // 키워드
     @ManyToOne(fetch = FetchType.LAZY)
-    private Keyword Keyword;
+    private Keyword keyword;
 
     // 일간 우수작
     @ManyToOne(fetch = FetchType.LAZY)
     private DailyBest dailyBest;
 
     // 사진 URL
-    @Column(nullable = false)
-    private String imageUrl;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images;
 
     // 사진 설명
     @Column(nullable = true)
@@ -54,4 +57,9 @@
 
     // 위치
     private String location;
+
+    public void addImage(Image image) {
+      images.add(image);
+      image.setPost(this);
+    }
   }
