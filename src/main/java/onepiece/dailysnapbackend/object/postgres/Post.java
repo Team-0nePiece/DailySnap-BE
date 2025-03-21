@@ -40,6 +40,23 @@
     @ManyToOne(fetch = FetchType.LAZY)
     private DailyBest dailyBest;
 
+    // 주간 우수작
+    @ManyToOne(fetch = FetchType.LAZY)
+    private WeeklyBest weeklyBest;
+
+    // 월간 우수작
+    @ManyToOne(fetch = FetchType.LAZY)
+    private MonthlyBest monthlyBest;
+
+    // 일간 순위
+    private Integer dailyRank;
+
+    // 주간 순위
+    private Integer weeklyRank;
+
+    // 월간 순위
+    private Integer monthlyRank;
+
     // 사진 설명
     @Column(nullable = true)
     private String content;
